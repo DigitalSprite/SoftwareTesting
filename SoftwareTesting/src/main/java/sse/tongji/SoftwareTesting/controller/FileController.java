@@ -105,7 +105,7 @@ public class FileController {
      * @return
      */
     @GetMapping("/download")
-    public Object Download(@RequestParam(value = "name")String name, HttpServletRequest request, HttpServletResponse response){
+    public void Download(@RequestParam(value = "name")String name, HttpServletResponse response){
 //        try{
 //            String filename = name + ".csv";
 //            String path = FileConfig.OutputCsvFileRoot + filename;
@@ -126,30 +126,51 @@ public class FileController {
 //            e.printStackTrace();
 //        }
 //        return response;
-        response.setCharacterEncoding(request.getCharacterEncoding());
-        response.setContentType("application/octet-stream");
-        FileInputStream fis = null;
+//        response.setCharacterEncoding(request.getCharacterEncoding());
+//        response.setContentType("application/octet-stream");
+//        FileInputStream fis = null;
+//        try {
+//            File file = new File(FileConfig.OutputCsvFileRoot + name + ".csv");
+//            fis = new FileInputStream(file);
+//            response.setHeader("Content-Disposition", "attachment; filename="+file.getName());
+//            IOUtils.copy(fis,response.getOutputStream());
+//            response.flushBuffer();
+//            return "Successful!";
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//            return "File not found";
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return "IOException";
+//        } finally {
+//            if (fis != null) {
+//                try {
+//                    fis.close();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+        File file = new File(FileConfig.OutputCsvFileRoot + name + ".csv");
+        response.setHeader("Content-Disposition", "attachment;filename=" + name + ".prep");
+        Read(file, response);
+    }
+
+    public void Read(File file, HttpServletResponse resp){
+        resp.setHeader("content-type", "application/octet-stream");
+        resp.setContentType("application/octet-stream");
+        OutputStream os = null;
         try {
-            File file = new File(FileConfig.OutputCsvFileRoot + name + ".csv");
-            fis = new FileInputStream(file);
-            response.setHeader("Content-Disposition", "attachment; filename="+file.getName());
-            IOUtils.copy(fis,response.getOutputStream());
-            response.flushBuffer();
-            return "Successful!";
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return "File not found";
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "IOException";
-        } finally {
-            if (fis != null) {
-                try {
-                    fis.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            os = resp.getOutputStream();
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String s = "";
+            while((s = br.readLine()) != null){
+                s = s + "\n";
+                byte[] bytes = s.getBytes();
+                os.write(bytes);
             }
+        } catch (IOException e) {
+            System.out.println("No such file!");
         }
     }
 }
