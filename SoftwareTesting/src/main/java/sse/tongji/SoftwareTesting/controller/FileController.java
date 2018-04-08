@@ -106,53 +106,8 @@ public class FileController {
      */
     @GetMapping("/download")
     public void Download(@RequestParam(value = "name")String name, HttpServletResponse response){
-//        try{
-//            String filename = name + ".csv";
-//            String path = FileConfig.OutputCsvFileRoot + filename;
-//            File file = new File(path);
-//            InputStream fis = new BufferedInputStream(new FileInputStream(path));
-//            byte[] buffer = new byte[fis.available()];
-//            fis.read(buffer);
-//            fis.close();
-//            response.reset();
-//            response.addHeader("Content-Disposition", "attachment;filename=" + new String(filename.getBytes()));
-//            response.addHeader("Content-Length", "" + file.length());
-//            OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
-//            response.setContentType("application/octet-stream");
-//            toClient.write(buffer);
-//            toClient.flush();
-//            toClient.close();
-//        }catch (IOException e){
-//            e.printStackTrace();
-//        }
-//        return response;
-//        response.setCharacterEncoding(request.getCharacterEncoding());
-//        response.setContentType("application/octet-stream");
-//        FileInputStream fis = null;
-//        try {
-//            File file = new File(FileConfig.OutputCsvFileRoot + name + ".csv");
-//            fis = new FileInputStream(file);
-//            response.setHeader("Content-Disposition", "attachment; filename="+file.getName());
-//            IOUtils.copy(fis,response.getOutputStream());
-//            response.flushBuffer();
-//            return "Successful!";
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//            return "File not found";
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return "IOException";
-//        } finally {
-//            if (fis != null) {
-//                try {
-//                    fis.close();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
         File file = new File(FileConfig.OutputCsvFileRoot + name + ".csv");
-        response.setHeader("Content-Disposition", "attachment;filename=" + name + ".prep");
+        response.setHeader("Content-Disposition", "attachment;filename=" + name + ".csv");
         Read(file, response);
     }
 
