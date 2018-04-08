@@ -1,5 +1,7 @@
-import com.csvreader.CsvReader;
+package sse.tongji.SoftwareTesting.res.JavaFiles;
 
+import com.csvreader.CsvReader;
+import sse.tongji.SoftwareTesting.config.FileConfig;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,13 +29,8 @@ public class Sales {
             return -1;
     }
 
-    /**
-     *
-     * @param args：第一个参数代表输入csv文件路径，第二个参数表示输出csv文件路径
-     */
-    public static void main(String[] args){
-//        String inputFilePath = args[0];
-        String inputFilePath = "src/test.csv";
+    public static Object SaleSystem(String csvFileName){
+        String inputFilePath = FileConfig.InputScvFileRoot + csvFileName + ".csv";
         try{
             CsvReader csvReader = new CsvReader(inputFilePath);
             csvReader.readHeaders();
@@ -92,8 +89,7 @@ public class Sales {
             }
             System.out.println(dataList);
 
-//            String outputFilePath = args[1];
-            String outputFilePath = "test2.csv";
+            String outputFilePath = FileConfig.OutputCsvFileRoot + csvFileName + ".csv";
             File csvFile = null;
             BufferedWriter csvWriter = null;
             try{
@@ -104,9 +100,7 @@ public class Sales {
                 }
                 csvFile.createNewFile();
                 csvWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csvFile), "UTF-8"));
-
                 writeRow(headList, csvWriter);
-
                 for(List<Object> row : dataList){
                     writeRow(row, csvWriter);
                 }
@@ -116,9 +110,11 @@ public class Sales {
             }finally {
                 csvWriter.close();
             }
+            return null;
 
         }catch (IOException e){
             e.printStackTrace();
+            return null;
         }
     }
 

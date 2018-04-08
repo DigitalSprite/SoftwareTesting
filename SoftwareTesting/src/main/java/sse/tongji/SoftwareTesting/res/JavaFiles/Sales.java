@@ -89,7 +89,7 @@ public class Sales {
             }
             System.out.println(dataList);
 
-            String outputFilePath = FileConfig.OutputFileRoot + csvFileName + ".csv";
+            String outputFilePath = FileConfig.OutputCsvFileRoot + csvFileName + ".csv";
             File csvFile = null;
             BufferedWriter csvWriter = null;
             try{
