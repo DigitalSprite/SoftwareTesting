@@ -21,6 +21,7 @@ public class TestController {
         try{
             CsvTest csvTest = new CsvTest();
             Object result = csvTest.Test(className, funcName, csvName);
+            System.out.print(result);
             return result;
         }catch (Exception e){
             return "Failed";

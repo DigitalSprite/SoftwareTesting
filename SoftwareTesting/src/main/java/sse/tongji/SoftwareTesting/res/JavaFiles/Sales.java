@@ -5,6 +5,7 @@ import sse.tongji.SoftwareTesting.config.FileConfig;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class Sales {
@@ -41,6 +42,12 @@ public class Sales {
             List<Object> headList = Arrays.asList(head);
             List<List<Object>> dataList = new ArrayList<List<Object>>();
 
+            int total_num = 0;
+            int correct_num = 0;
+            int content_error = 0;
+            int format_error = 0;
+            int other_error = 0;
+            String statistics = "";
             //遍历原始csv文件数据
             while(csvReader.readRecord()){
                 String[] record = csvReader.getRawRecord().split(",");
@@ -55,12 +62,14 @@ public class Sales {
                     }
                     rowList.add(price);
                     dataList.add(rowList);
+                    statistics = "销售额为：" + String.valueOf(price);
                     break;
                 }else if(record.length != 4){
                     System.out.println("Wrong data format!!!");
                     rowList.add(-1);
                     rowList.add(false);
                     dataList.add(rowList);
+                    format_error++;
                 }else{
                     double sale = calculateSale(Integer.parseInt(record[0]), Integer.parseInt(record[1]),
                             Integer.parseInt(record[2]));
@@ -73,19 +82,22 @@ public class Sales {
                         //写入csv数据
                         rowList.add(sale);
                         rowList.add((int)anticipate == (int)sale);
+                        correct_num++;
                     }else if(sale == -1){
 
                         //数据本身不符合要求
                         rowList.add(-2);
                         rowList.add(false);
+                        content_error++;
                     }else{
                         //其他奇奇怪怪的问题
                         rowList.add(-3);
                         rowList.add(false);
+                        other_error++;
                     }
                     dataList.add(rowList);
                 }
-
+                total_num++;
             }
             System.out.println(dataList);
 
@@ -110,7 +122,14 @@ public class Sales {
             }finally {
                 csvWriter.close();
             }
-            return null;
+            HashMap<String, Object> result = new HashMap<>();
+            result.put("total_value",total_num);
+            result.put("correct_value", correct_num);
+            result.put("content_error", content_error);
+            result.put("format_error", format_error);
+            result.put("other_error", other_error);
+            result.put("statistics", statistics);
+            return result;
 
         }catch (IOException e){
             e.printStackTrace();
