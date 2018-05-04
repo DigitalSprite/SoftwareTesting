@@ -4,6 +4,9 @@ public class Calendar {
 
     public static double test(String input){
         String[] data = input.split(",");
+        if(data.length != 3){
+            return -1.0;
+        }
         int year = 0;
         int month = 0;
         int day = 0;

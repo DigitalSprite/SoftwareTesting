@@ -25,13 +25,8 @@ public class CsvTest {
             List<String> headlist = new ArrayList<>();
             for (String i : title.split(","))
                 headlist.add(i);
+            headlist.add("judge");
             List<Double> sales = new ArrayList<>();
-
-            //构建csv文件
-//            Object[] head = {"sales", "verification"};
-//            List<Object> headList = Arrays.asList(head);
-//            System.out.println("header list number: " + headList.size());
-//            List<List<Object>> dataList = new ArrayList<List<Object>>();
 
             int total_num = 0;
             int correct_num = 0;
@@ -65,8 +60,15 @@ public class CsvTest {
                     other_error++;
                 }
                 List<Object> temp = new ArrayList<>();
-                for (String i : record.split(","))
-                    temp.add(i);
+                String[] content = record.split(",");
+                for(int i = 0; i < headlist.size() - 1; i++){
+                    if (i < content.length){
+                        temp.add(content[i]);
+                    }
+                    else{
+                        temp.add("");
+                    }
+                }
                 temp.add(judge);
                 tof.add(temp);
                 total_num++;
@@ -101,7 +103,6 @@ public class CsvTest {
 //            result.put("statistics", statistics);
             result.put("result",tof);
             result.put("header",headlist);
-            result.put("length",headlist.size());
             return result;
         }catch (Exception e){
             e.printStackTrace();
